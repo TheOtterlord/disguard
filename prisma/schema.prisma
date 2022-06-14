@@ -1,0 +1,63 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Action {
+  BAN
+  KICK
+  MUTE
+  NONE
+}
+
+model GuildSettings {
+  guild String @id
+  scammer Action @default(BAN)
+  hacked Action @default(MUTE)
+  logChannel String?
+}
+
+model Domain {
+  value String @id
+  message String
+  reporter String
+  blacklist Blacklist @relation(fields: [blacklistId], references: [id])
+  blacklistId String
+  createdAt DateTime @default(now())
+}
+
+enum UserType {
+  HACKED
+  SCAMMER
+}
+
+model User {
+  id String @id
+  type UserType
+  reporter String
+  blacklist Blacklist @relation(fields: [blacklistId], references: [id])
+  blacklistId String
+  createdAt DateTime @default(now())
+}
+
+model Blacklist {
+  id          String   @id @default(uuid())
+  name        String
+  // the owner is the user who created the blacklist
+  owner       String
+  // controllers are servers that have permission to control the blacklist
+  controllers String[]
+  subscribers String[]
+  domains     Domain[]
+  users       User[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
