@@ -93,6 +93,10 @@ export default class App {
         }
       })
 
+      prisma.blacklist.findMany().then(blacklists => {
+        blacklists.map(b => this.blacklists.set(b.id, b))
+      })
+
       res(0);
     });
   }
