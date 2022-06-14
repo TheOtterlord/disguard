@@ -7,14 +7,12 @@ import prisma from '../prisma';
 export default {
 	data: new ContextMenuCommandBuilder()
 		.setName('Blacklist Scammer')
-    .setType(ApplicationCommandType.Message)
+    .setType(ApplicationCommandType.User)
     .setDefaultMemberPermissions(8)
     .setDMPermission(false),
 	async execute(app: App, interaction: CommandInteraction) {
     if (!interaction.isMessageContextMenu()) return interaction.reply('This command can only be used in a context menu.')
 
-    const urls = interaction.targetMessage.content.match(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g)
-    const domains = urls?.map(url => [...url.matchAll(/^(?:https?:\/\/)?(?:[^@\n]+@)?(?:www\.)?([^:\/\n?]+)/img)][0][1])
     const blacklist = await prisma.blacklist.findFirst({
       where: {
         controllers: { has: interaction.guildId }
@@ -38,18 +36,6 @@ export default {
               type: 'SCAMMER',
             }
           }
-        },
-        domains: {
-          connectOrCreate: domains?.map(domain => ({
-            where: {
-              value: domain
-            },
-            create: {
-              value: domain,
-              message: interaction.targetMessage.content,
-              reporter: interaction.member?.user.id || 'Unknown',
-            }
-          }))
         }
       }
     }).then(() => interaction.reply({ephemeral: true, content: 'Blacklisted.'}))

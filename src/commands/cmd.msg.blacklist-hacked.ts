@@ -12,7 +12,6 @@ export default {
     .setDMPermission(false),
 	async execute(app: App, interaction: CommandInteraction) {
     if (!interaction.isMessageContextMenu()) return interaction.reply('This command can only be used in a context menu.')
-    interaction.reply(`Command: Blacklist\nTarget: ${interaction.targetMessage.content}`)
 
     const urls = interaction.targetMessage.content.match(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g)
     const domains = urls?.map(url => [...url.matchAll(/^(?:https?:\/\/)?(?:[^@\n]+@)?(?:www\.)?([^:\/\n?]+)/img)][0][1])
