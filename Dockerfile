@@ -14,6 +14,7 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 # If using npm comment out above and use below instead
+RUN npx prisma generate
 RUN npm run build
 
 # Production image, copy all the files and run next

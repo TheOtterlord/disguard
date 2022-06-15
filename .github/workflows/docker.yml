@@ -17,5 +17,5 @@ jobs:
         run: docker build -t disguard .
       - name: Tag
         run: docker tag disguard ghcr.io/disguard
-      - name: Push
-        run: docker push ghcr.io/disguard
+      # - name: Push
+      #   run: docker push ghcr.io/disguard
