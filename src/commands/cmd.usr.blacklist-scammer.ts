@@ -38,7 +38,10 @@ export default {
           }
         }
       }
-    }).then(() => interaction.reply({ephemeral: true, content: 'Blacklisted.'}))
+    }).then(() => {
+      interaction.reply({ephemeral: true, content: 'Blacklisted.'})
+      app.blacklisted(interaction.targetMessage.author.id)
+    })
     .catch(err => {
       interaction.reply({ephemeral: true, content: 'Failed to blacklist.'})
       console.error(err)

@@ -101,6 +101,26 @@ export default class App {
     });
   }
 
+  /**
+   * TODO: add logging to discord channel
+   */
+  async blacklisted(user: string) {
+    // @ts-ignore
+    const blacklists = this.blacklists.filter(b => b.users.find(u => u.id === user))
+    const guilds = this.bot.guilds.cache.filter(g => g.members.cache.has(user))
+    for (const guild of guilds.values()) {
+      const blacklist = blacklists.filter(b => b.subscribers.includes(guild.id)).first()
+      if (blacklist) {
+        const settings = await prisma.guildSettings.findUnique({ where: { guild: guild.id } })
+        // @ts-ignore
+        const action = blacklist.users.find(u => u.id === user)?.type === 'SCAMMER' ? settings?.scammer ?? 'BAN' : settings?.hacked ?? 'MUTE'
+        if (action === 'BAN') guild.members.ban(user, { reason: `Added to "${blacklist.name}" blacklist` })
+        if (action === 'KICK') guild.members.kick(user, `Added to "${blacklist.name}" blacklist`)
+        if (action === 'MUTE') return // TODO: mute
+      }
+    }
+  }
+
   async stop() {
     this.bot.destroy()
   }
