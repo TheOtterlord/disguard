@@ -5,12 +5,14 @@ FROM node AS deps
 WORKDIR /app
 
 COPY package.json package-lock.json ./
+COPY ./prisma prisma
 RUN npm ci
 
 # Rebuild the source code only when needed
 FROM node AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
+COPY ./prisma prisma
 COPY . .
 
 # If using npm comment out above and use below instead
@@ -27,9 +29,10 @@ RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 discordjs
 
 COPY --from=builder /app/package.json ./package.json
+COPY --from=builder /app/prisma prisma
 COPY --from=deps /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
 
 USER discordjs
 
-CMD ["node", "dist/index.js"]
+CMD ["npm", "start"]
