@@ -1,6 +1,7 @@
 import { SlashCommandBuilder } from '@discordjs/builders'
 import { UserType } from '@prisma/client'
 import { AutocompleteInteraction, CommandInteraction, Interaction, Message } from 'discord.js'
+import App from '..'
 import prisma from '../prisma'
 
 export default {
@@ -30,7 +31,7 @@ export default {
       .setDescription('Blacklist a user from this guild\'s blacklist')
       .addUserOption((op) => op.setName('user').setDescription('The user to blacklist').setRequired(true))
       .addStringOption((op) => op.setName('type').setDescription('The type of user (scammer or hacked account)').setChoices({name: 'Scam Account', value: 'SCAMMER'}, {name: 'Hacked Account', value: 'HACKED'}).setRequired(false)))
-    , async execute(app, interaction: CommandInteraction) {
+    , async execute(app: App, interaction: CommandInteraction) {
 		try {
       if (!interaction.guild) return interaction.reply('You must be in a server to use this command.')
       if (!interaction.memberPermissions?.has('ADMINISTRATOR')) return interaction.reply('You must be an administrator to use this command.')
@@ -64,7 +65,7 @@ export default {
         if (interaction.isAutocomplete()) {
 
           const search = (interaction as AutocompleteInteraction).options.getFocused()
-          return (interaction as AutocompleteInteraction).respond(app.blacklists.map(b => b).filter(b => b.name.toLowerCase().includes(search)).map(b => {return {name: b.name, value: b.id}}))
+          return (interaction as AutocompleteInteraction).respond(app.blacklists.map(b => b).filter(b => b.name.toLowerCase().includes(search.toString())).map(b => {return {name: b.name, value: b.id}}))
         }
         
         const blacklistId = interaction.options.getString('id')!
@@ -150,6 +151,7 @@ export default {
           }
         }).then(() => {
           interaction.reply(`Added ${user.username} to ${blacklist.name} (${blacklist.id})`)
+          app.blacklisted(user.id)
         }).catch(err => {
           interaction.reply(`Error adding ${user.username} to ${blacklist.name} (${blacklist.id})`)
           console.error(err)
