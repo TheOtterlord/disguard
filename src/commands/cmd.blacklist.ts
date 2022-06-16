@@ -86,6 +86,7 @@ export default {
         const name = interaction.options.getString('name')!
 
         if (await prisma.blacklist.findFirst({ where: { controllers: { has: interaction.guildId } } })) return interaction.reply('This guild is already a controller of a blacklist.')
+        if (await prisma.blacklist.findFirst({ where: { name } })) return interaction.reply('A blacklist with this name already exists.')
 
         prisma.blacklist.create({
           data: {
