@@ -22,5 +22,8 @@ Add Disguard to your server using the invite link. Once Disguard is in your serv
 
 ### Quick Reference
 
+- Use `/blacklist sub` to subscribe to a blacklist
+- Use `/blacklist create` to create a blacklist
+- Use `/blacklist add` in another guild to add them as a controller (allowing them to add to your blacklist)
 - Use `/blacklist user` or the message and user context menus to add a user to your guild's blacklist
 - Use `/set` commands to change your settings
