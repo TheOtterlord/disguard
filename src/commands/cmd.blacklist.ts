@@ -39,7 +39,7 @@ export default {
 			if (interaction.options.getSubcommand() === 'sub') {
         if (interaction.isAutocomplete()) {
           const search = (interaction as AutocompleteInteraction).options.getFocused().toString().toLowerCase()
-          return (interaction as AutocompleteInteraction).respond(app.blacklists.map(b => b).filter(b => b.name.toLowerCase().includes(search)).map(b => {return {name: b.name, value: b.id}}))
+          return (interaction as AutocompleteInteraction).respond(app.blacklists.map(b => b).filter(b => b.name.toLowerCase().includes(search)).map(b => {return {name: `${b.name} (${b.id})`, value: b.id}}))
         }
 
         const blacklistId = interaction.options.getString('id')!
@@ -65,7 +65,7 @@ export default {
         if (interaction.isAutocomplete()) {
 
           const search = (interaction as AutocompleteInteraction).options.getFocused()
-          return (interaction as AutocompleteInteraction).respond(app.blacklists.map(b => b).filter(b => b.name.toLowerCase().includes(search.toString())).map(b => {return {name: b.name, value: b.id}}))
+          return (interaction as AutocompleteInteraction).respond(app.blacklists.map(b => b).filter(b => b.name.toLowerCase().includes(search.toString())).map(b => {return {name: `${b.name} (${b.id})`, value: b.id}}))
         }
         
         const blacklistId = interaction.options.getString('id')!
@@ -106,7 +106,7 @@ export default {
 
         if (interaction.isAutocomplete()) {
           const search = (interaction as AutocompleteInteraction).options.getFocused().toString().toLowerCase()
-          return (interaction as AutocompleteInteraction).respond(app.blacklists.map(b => b).filter(b => b.name.toLowerCase().includes(search)).map(b => {return {name: b.name, value: b.id}}))
+          return (interaction as AutocompleteInteraction).respond(app.blacklists.map(b => b).filter(b => b.name.toLowerCase().includes(search)).map(b => {return {name: `${b.name} (${b.id})`, value: b.id}}))
         }
 
         const blacklistId = interaction.options.getString('blacklist')!
