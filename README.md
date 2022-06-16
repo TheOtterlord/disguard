@@ -19,3 +19,8 @@ Disguard allows servers to subscribe to blacklists. Blacklists are lists of scam
 ## How to use
 
 Add Disguard to your server using the invite link. Once Disguard is in your server, you are automatically subscribed to the official, curated Disguard blacklist. You can then subscribe to other blacklists using `/blacklist sub`. Make sure you only subscribe to blacklists you trust.
+
+### Quick Reference
+
+- Use `/blacklist user` or the message and user context menus to add a user to your guild's blacklist
+- Use `/set` commands to change your settings

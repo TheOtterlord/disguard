@@ -135,10 +135,6 @@ export default {
         if (!blacklist) return interaction.reply('No blacklist found.')
         const user = interaction.options.getUser('user')
         if (!user) return interaction.reply('No user found.')
-        app.bot.guilds.cache.filter(g => g.members.cache.has(user.id)).forEach(g => {
-          // TODO: take action on user
-          // TODO: take action specified in guild settings
-        })
         prisma.blacklist.update({
           where: { id: blacklist.id },
           data: {
