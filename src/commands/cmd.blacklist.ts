@@ -56,6 +56,7 @@ export default {
           },
         }).then(() => {
           interaction.reply(`Subscribed to ${blacklist.name}.`)
+          app.log(interaction.guild!, `<@${interaction.user.id}> subscribed this guild to ${blacklist.name}`)
         }).catch(err => {
           interaction.reply(`Error subscribing to ${blacklist.name}`)
           console.error(err)
@@ -78,6 +79,7 @@ export default {
           },
         }).then(() => {
           interaction.reply(`Unsubscribed from ${blacklistId}.`)
+          app.log(interaction.guild!, `<@${interaction.user.id}> unsubscribed this guild from ${blacklistId}`)
         }).catch(err => {
           interaction.reply(`Error unsubscribing from ${blacklistId}`)
           console.error(err)
@@ -98,6 +100,7 @@ export default {
         }).then(blacklist => {
           interaction.reply(`Created blacklist ${blacklist.name} (${blacklist.id})`)
           app.blacklists.set(blacklist.id, blacklist)
+          app.log(interaction.guild!, `<@${interaction.user.id}> created blacklist ${blacklist.name} (${blacklist.id})`)
         }).catch(err => {
           interaction.reply(`Error creating blacklist`)
           console.error(err)
@@ -125,6 +128,7 @@ export default {
           }
         }).then(() => {
           interaction.reply(`Added ${interaction.guild?.name} to ${blacklist.name} (${blacklist.id})`)
+          app.log(interaction.guild!, `<@${interaction.user.id}> promoted this guild to a controller of ${blacklist.name}`)
         }).catch(err => {
           interaction.reply(`Error adding ${interaction.guild?.name} to ${blacklist.name} (${blacklist.id})`)
           console.error(err)
