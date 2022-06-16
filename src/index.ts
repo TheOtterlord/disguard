@@ -1,6 +1,6 @@
 import { REST } from "@discordjs/rest"
 import { Routes } from "discord-api-types/v10"
-import { Client, Collection, Intents } from "discord.js"
+import { Client, Collection, Guild, Intents, MessageOptions, MessagePayload } from "discord.js"
 import glob from 'glob'
 import type { Blacklist, User } from "@prisma/client"
 
@@ -90,6 +90,7 @@ export default class App {
           if (action === 'KICK') m.kick(reason.reason)
           if (action === 'MUTE') return // TODO: mute
           // if (action === 'WARN') return // TODO: add warning option to settings
+          this.log(m.guild, `${action} ${user} for being blacklisted in "${blacklist.name}"`)
         }
       })
 
@@ -99,6 +100,16 @@ export default class App {
 
       res(0);
     });
+  }
+
+  async log(guild: Guild, message: string | MessagePayload | MessageOptions) {
+    const settings = await prisma.guildSettings.findUnique({ where: { guild: guild.id } })
+    if (settings?.logChannel) {
+      const channel = this.bot.channels.cache.get(settings.logChannel)
+      if (channel && channel.isText()) {
+        channel.send(message)
+      }
+    }
   }
 
   /**
@@ -117,6 +128,7 @@ export default class App {
         if (action === 'BAN') guild.members.ban(user, { reason: `Added to "${blacklist.name}" blacklist` })
         if (action === 'KICK') guild.members.kick(user, `Added to "${blacklist.name}" blacklist`)
         if (action === 'MUTE') return // TODO: mute
+        this.log(guild, `${action} ${user} for being blacklisted in "${blacklist.name}"`)
       }
     }
   }
