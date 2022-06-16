@@ -88,7 +88,7 @@ export default class App {
 
           if (action === 'BAN') m.ban(reason)
           if (action === 'KICK') m.kick(reason.reason)
-          if (action === 'MUTE') return // TODO: mute
+          if (action === 'MUTE') this.mute(user.id, m.guild)
           // if (action === 'WARN') return // TODO: add warning option to settings
           this.log(m.guild, `${action} ${user} for being blacklisted in "${blacklist.name}"`)
         }
@@ -112,9 +112,6 @@ export default class App {
     }
   }
 
-  /**
-   * TODO: add logging to discord channel
-   */
   async blacklisted(user: string) {
     // @ts-ignore
     const blacklists = this.blacklists.filter(b => b.users.find(u => u.id === user))
@@ -127,8 +124,40 @@ export default class App {
         const action = blacklist.users.find(u => u.id === user)?.type === 'SCAMMER' ? settings?.scammer ?? 'BAN' : settings?.hacked ?? 'MUTE'
         if (action === 'BAN') guild.members.ban(user, { reason: `Added to "${blacklist.name}" blacklist` })
         if (action === 'KICK') guild.members.kick(user, `Added to "${blacklist.name}" blacklist`)
-        if (action === 'MUTE') return // TODO: mute
+        if (action === 'MUTE') this.mute(user, guild)
         this.log(guild, `${action} ${user} for being blacklisted in "${blacklist.name}"`)
+      }
+    }
+  }
+
+  async mute(user: string, guild: Guild) {
+    let settings = await prisma.guildSettings.findUnique({ where: { guild: guild.id } })
+    if (!settings?.muteRole) {
+      const role = await guild.roles.create({
+        name: 'Muted',
+        reason: 'Muted role created by bot. Can be replaced with /set muteRole',
+      })
+      for (const channel of guild.channels.cache.values()) {
+        if (channel.type === 'GUILD_TEXT') await channel.permissionOverwrites.create(role, {
+          ADD_REACTIONS: false,
+          VIEW_CHANNEL: false,
+          SEND_MESSAGES: false,
+          USE_PUBLIC_THREADS: false,
+          USE_PRIVATE_THREADS: false,
+          CHANGE_NICKNAME: false,
+          CREATE_INSTANT_INVITE: false,
+        })
+      }
+      settings = await prisma.guildSettings.update({
+        where: { guild: guild.id },
+        data: { muteRole: role.id },
+      })
+    }
+    const muteRole = guild.roles.cache.get(settings?.muteRole!)
+    if (muteRole) {
+      const member = guild.members.cache.get(user)
+      if (member) {
+        await member.roles.add(muteRole)
       }
     }
   }

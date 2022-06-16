@@ -39,7 +39,7 @@ export default {
 			if (interaction.options.getSubcommand() === 'sub') {
         if (interaction.isAutocomplete()) {
           const search = (interaction as AutocompleteInteraction).options.getFocused().toString().toLowerCase()
-          return (interaction as AutocompleteInteraction).respond(app.blacklists.map(b => b).filter(b => b.name.toLowerCase().includes(search)).map(b => {return {name: b.name, value: b.id}}))
+          return (interaction as AutocompleteInteraction).respond(app.blacklists.map(b => b).filter(b => b.name.toLowerCase().includes(search)).map(b => {return {name: `${b.name} (${b.id})`, value: b.id}}))
         }
 
         const blacklistId = interaction.options.getString('id')!
@@ -66,7 +66,7 @@ export default {
         if (interaction.isAutocomplete()) {
 
           const search = (interaction as AutocompleteInteraction).options.getFocused()
-          return (interaction as AutocompleteInteraction).respond(app.blacklists.map(b => b).filter(b => b.name.toLowerCase().includes(search.toString())).map(b => {return {name: b.name, value: b.id}}))
+          return (interaction as AutocompleteInteraction).respond(app.blacklists.map(b => b).filter(b => b.name.toLowerCase().includes(search.toString())).map(b => {return {name: `${b.name} (${b.id})`, value: b.id}}))
         }
         
         const blacklistId = interaction.options.getString('id')!
@@ -88,6 +88,7 @@ export default {
         const name = interaction.options.getString('name')!
 
         if (await prisma.blacklist.findFirst({ where: { controllers: { has: interaction.guildId } } })) return interaction.reply('This guild is already a controller of a blacklist.')
+        if (await prisma.blacklist.findFirst({ where: { name } })) return interaction.reply('A blacklist with this name already exists.')
 
         prisma.blacklist.create({
           data: {
@@ -109,7 +110,7 @@ export default {
 
         if (interaction.isAutocomplete()) {
           const search = (interaction as AutocompleteInteraction).options.getFocused().toString().toLowerCase()
-          return (interaction as AutocompleteInteraction).respond(app.blacklists.map(b => b).filter(b => b.name.toLowerCase().includes(search)).map(b => {return {name: b.name, value: b.id}}))
+          return (interaction as AutocompleteInteraction).respond(app.blacklists.map(b => b).filter(b => b.name.toLowerCase().includes(search)).map(b => {return {name: `${b.name} (${b.id})`, value: b.id}}))
         }
 
         const blacklistId = interaction.options.getString('blacklist')!
@@ -138,10 +139,6 @@ export default {
         if (!blacklist) return interaction.reply('No blacklist found.')
         const user = interaction.options.getUser('user')
         if (!user) return interaction.reply('No user found.')
-        app.bot.guilds.cache.filter(g => g.members.cache.has(user.id)).forEach(g => {
-          // TODO: take action on user
-          // TODO: take action specified in guild settings
-        })
         prisma.blacklist.update({
           where: { id: blacklist.id },
           data: {
