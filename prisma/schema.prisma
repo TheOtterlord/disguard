@@ -22,6 +22,7 @@ model GuildSettings {
   scammer Action @default(BAN)
   hacked Action @default(MUTE)
   logChannel String?
+  muteRole String?
 }
 
 model Domain {
