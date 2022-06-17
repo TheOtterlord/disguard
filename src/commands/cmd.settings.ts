@@ -39,6 +39,14 @@ export default {
         .addChannelTypes(ChannelType.GuildText)
       )
     )
+    .addSubcommand(s => s
+      .setName('muteRole')
+      .setDescription('Set the mute role to use on muted users')
+      .addRoleOption((op) => op
+        .setName('role')
+        .setDescription('The role to use to mute users')
+      )
+    )
 
   ,	async execute(app: App, interaction: CommandInteraction) {
     const subcommand = interaction.options.getSubcommand()
