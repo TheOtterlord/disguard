@@ -12,6 +12,8 @@
 
 Disguard aims to solve the problem of Discord scamming by crowdsourcing scammer accounts and domains reported by users. Put simply, the more servers it joins, the safer Discord becomes. Disguard also considers hacked accounts, and allows users to report those seperately. Server owners are in full control of what to do when a scammer is detected in their server, and can configure Disguard to auto-ban/kick/mute or just warn a moderator.
 
+[Invite](https://discord.com/api/oauth2/authorize?client_id=984762957365915698&permissions=1393985661958&scope=bot%20applications.commands) Disguard to your server to get started!
+
 ## How it works
 
 Disguard allows servers to subscribe to blacklists. Blacklists are lists of scammer accounts (and hacked accounts) a server or group of servers has collected. If a user in your server is also found to be in a blacklist you subscribe to, appropriate action will be taken. Using this model, you can choose to only subscribe to the blacklists you trust.
