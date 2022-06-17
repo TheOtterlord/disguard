@@ -135,7 +135,7 @@ export default {
         })
       } else if (interaction.options.getSubcommand() === 'user') {
         const userType = (interaction.options.getString('type') ?? 'SCAMMER') as UserType
-        const blacklist = await prisma.blacklist.findFirst({ where: { controllers: { has: (interaction as Interaction).member?.user.id } } })
+        const blacklist = await prisma.blacklist.findFirst({ where: { controllers: { has: (interaction as Interaction).guildId } } })
         if (!blacklist) return interaction.reply('No blacklist found.')
         const user = interaction.options.getUser('user')
         if (!user) return interaction.reply('No user found.')
