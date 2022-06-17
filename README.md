@@ -27,9 +27,3 @@ Add Disguard to your server using the invite link. Once Disguard is in your serv
 - Use `/blacklist add` in another guild to add them as a controller (allowing them to add to your blacklist)
 - Use `/blacklist user` or the message and user context menus to add a user to your guild's blacklist
 - Use `/set` commands to change your settings
-
-## Todo list
-
-- Remove guild as controller
-- Add some sort of confirmation mechanism to adding guilds as a controller
-- Implement warning as a responsive action to flagging
