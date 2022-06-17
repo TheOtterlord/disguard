@@ -40,7 +40,7 @@ export default {
       )
     )
     .addSubcommand(s => s
-      .setName('muteRole')
+      .setName('muted')
       .setDescription('Set the mute role to use on muted users')
       .addRoleOption((op) => op
         .setName('role')
@@ -84,6 +84,22 @@ export default {
         }
       })
       return interaction.reply(`Set logs channel to ${channel.name}`)
+    } else if (subcommand === 'muted') {
+      const role = interaction.options.getRole('role')
+      if (!role) return interaction.reply('You must specify a role.')
+      await prisma.guildSettings.upsert({
+        where: {
+          guild: interaction.guild?.id
+        },
+        update: {
+          muteRole: role.id
+        },
+        create: {
+          guild: interaction.guild?.id!,
+          muteRole: role.id,
+        }
+      })
+      return interaction.reply(`Set muted role to ${role.name}`)
     }
 	},
 };
