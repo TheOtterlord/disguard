@@ -40,12 +40,14 @@ enum UserType {
 }
 
 model User {
-  id String @id
+  uuid String @id @default(uuid())
+  id String
   type UserType
   reporter String
   blacklist Blacklist @relation(fields: [blacklistId], references: [id])
   blacklistId String
   createdAt DateTime @default(now())
+  @@unique([id, blacklistId])
 }
 
 model Blacklist {
