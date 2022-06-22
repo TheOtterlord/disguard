@@ -154,7 +154,7 @@ export default {
           interaction.reply(`Added ${user.username} to ${blacklist.name} (${blacklist.id})`)
           app.blacklisted(user.id)
         }).catch(err => {
-          interaction.reply(`Error adding ${user.username} to ${blacklist.name} (${blacklist.id})`)
+          interaction.reply(`Error adding ${user.username} to ${blacklist.name} (${blacklist.id}). They might already be in the blacklist`)
           console.error(err)
         })
       }
