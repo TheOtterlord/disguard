@@ -41,7 +41,8 @@ export default {
           }
         }
       })
-      return interaction.reply(`Set ${subcommand} action to ${id}`)
+      app.log(interaction.guild!, `<#${interaction.user.id}> removed ${id} from ${blacklist?.name ?? 'blacklist'}`)
+      return interaction.reply({ephemeral: true, content: `Removed ${id} from ${blacklist?.name ?? 'blacklist'}`})
     }
 	},
 };
